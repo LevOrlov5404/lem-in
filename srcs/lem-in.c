@@ -99,10 +99,10 @@ t_w_with_len		**create_ways(n)
 	t_w_with_len	**ways;
 	int				i;
 
-	ways = ft_memalloc(sizeof(t_w_with_len**) * n);
+	ways = (t_w_with_len**)ft_memalloc(sizeof(t_w_with_len*) * n);
 	i = 0;
 	while (i < n)
-		ways[i++] = ft_memalloc(sizeof(t_w_with_len*));
+		ways[i++] = (t_w_with_len*)ft_memalloc(sizeof(t_w_with_len));
 	return (ways);
 }
 
@@ -241,9 +241,8 @@ t_output	*create_output(int ant_num, t_w *way_point)
 {
 	t_output	*output;
 
-	output = ft_memalloc(sizeof(t_output*));
+	output = (t_output*)ft_memalloc(sizeof(t_output));
 	output->ant_num = ant_num;
-	printf("in create ant_num = %d\n", output->ant_num);
 	output->way_point = way_point;
 	output->next = NULL;
 	return (output);
@@ -282,27 +281,24 @@ void		print_output(t_output *output)
 	printf("\n");
 }
 
-t_output	*swipe_output_while_end_point(t_p * par, t_output *output)
+void		update_output(t_p *par, t_output **output)
 {
 	t_w			*way_point;
-	t_output	*next_output;
-	
-	next_output = output;
-	way_point = next_output->way_point;
-	while (next_output && way_point->r == par->end)
-	{
-		next_output = next_output->next;
-		way_point = next_output->way_point;
-	}
-	return (next_output);
-}
+	t_output	*tmp_output;
 
-void		swipe_output_way_point(t_output *output)
-{
-	while (output)
+	way_point = (*output)->way_point;
+	while (*output && way_point->r == par->end)
 	{
-		output->way_point = output->way_point->next;
-		output = output->next;
+		tmp_output = *output;
+		*output = (*output)->next;
+		way_point = (*output)->way_point;
+		free(tmp_output);
+	}
+	tmp_output = *output;
+	while (tmp_output)
+	{
+		tmp_output->way_point = tmp_output->way_point->next;
+		tmp_output = tmp_output->next;
 	}
 }
 
@@ -311,37 +307,41 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 	int			ants;
 	int			ant_num;
 	int			i;
-	t_output	*tmp_output;
-	t_output	*next_output;
+	t_output	*output;
 
 	ants = par->ants_num;
 	ant_num = 1;
-	tmp_output = NULL;
+	output = NULL;
 	i = 0;
 	while (i < n_ways)
 	{
-		if (ants-- > ways[i]->k)
+		printf("ants = %d k = %d\n", ants, ways[i]->k);
+		if (ants > ways[i]->k)
 		{
-			// printf("____ counter ant_num = %d\n", ant_num);
-			add_output(&tmp_output, ant_num++, ways[i++]->way->next);
+			printf("in add\n");
+			--ants;
+			add_output(&output, ant_num++, ways[i]->way->next);
 		}
+		++i;
 	}
-	print_output(tmp_output);
-	next_output = swipe_output_while_end_point(par, tmp_output);
-	swipe_output_way_point(next_output);
-	i = 0;
-	while (i < n_ways)
+	print_output(output);
+	while (ants)
 	{
-		if (ants-- > ways[i]->k)
+		update_output(par, &output);
+		i = 0;
+		while (i < n_ways)
 		{
-			// printf("____ counter ant_num = %d\n", ant_num);
-			add_output(&next_output, ant_num++, ways[i++]->way->next);
+			printf("ants = %d k = %d\n", ants, ways[i]->k);
+			if (ants > ways[i]->k)
+			{
+				printf("in add\n");
+				--ants;
+				add_output(&output, ant_num++, ways[i]->way->next);
+			}
+			++i;
 		}
+		print_output(output);
 	}
-	print_output(next_output);
-	// while (ants)
-	// {
-	// }
 }
 
 void		solve(t_p *par)

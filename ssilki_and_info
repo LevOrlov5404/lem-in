@@ -1,0 +1,2 @@
+https://github.com/VBrazhnik/Lem_in/wiki/Algorithm
+gcc -g -o lem-in srcs/*.c libft/libft.a -I include
