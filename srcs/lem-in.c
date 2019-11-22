@@ -256,7 +256,7 @@ void		add_output(t_output **output, int ant_num, t_w *way_point)
 	if (!*output)
 	{
 		*output = create_output(ant_num, way_point);
-		printf("in add ant_num = %d\n", (*output)->ant_num);
+		// printf("in add ant_num = %d\n", (*output)->ant_num);
 	}
 	else
 	{
@@ -264,7 +264,7 @@ void		add_output(t_output **output, int ant_num, t_w *way_point)
 		while (tmp_output->next)
 			tmp_output = tmp_output->next;
 		tmp_output->next = create_output(ant_num, way_point);
-		printf("in add ant_num = %d\n", tmp_output->next->ant_num);
+		// printf("in add ant_num = %d\n", tmp_output->next->ant_num);
 	}
 }
 
@@ -280,6 +280,30 @@ void		print_output(t_output *output)
 		tmp_output = tmp_output->next;
 	}
 	printf("\n");
+}
+
+t_output	*swipe_output_while_end_point(t_p * par, t_output *output)
+{
+	t_w			*way_point;
+	t_output	*next_output;
+	
+	next_output = output;
+	way_point = next_output->way_point;
+	while (next_output && way_point->r == par->end)
+	{
+		next_output = next_output->next;
+		way_point = next_output->way_point;
+	}
+	return (next_output);
+}
+
+void		swipe_output_way_point(t_output *output)
+{
+	while (output)
+	{
+		output->way_point = output->way_point->next;
+		output = output->next;
+	}
 }
 
 void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
@@ -298,11 +322,23 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 	{
 		if (ants-- > ways[i]->k)
 		{
-			printf("____ counter ant_num = %d\n", ant_num);
+			// printf("____ counter ant_num = %d\n", ant_num);
 			add_output(&tmp_output, ant_num++, ways[i++]->way->next);
 		}
 	}
 	print_output(tmp_output);
+	next_output = swipe_output_while_end_point(par, tmp_output);
+	swipe_output_way_point(next_output);
+	i = 0;
+	while (i < n_ways)
+	{
+		if (ants-- > ways[i]->k)
+		{
+			// printf("____ counter ant_num = %d\n", ant_num);
+			add_output(&next_output, ant_num++, ways[i++]->way->next);
+		}
+	}
+	print_output(next_output);
 	// while (ants)
 	// {
 	// }
