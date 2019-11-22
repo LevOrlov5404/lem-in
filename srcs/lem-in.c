@@ -94,7 +94,7 @@ t_w		**change_ways_first(int n_ways, t_w **way, t_p *par)
 	return (new_way);
 }
 
-t_w_with_len		**create_ways(n)
+t_w_with_len		**create_ways(int n)
 {
 	t_w_with_len	**ways;
 	int				i;

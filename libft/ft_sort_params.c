@@ -19,7 +19,7 @@ void	ft_sort_params(char **str)
 
 	p = str;
 	c = str;
-	while (*(p + 1) != '\0')
+	while (*(p + 1))
 	{
 		if (ft_strcmp(*p, *(p + 1)) > 0)
 		{
