@@ -12,6 +12,17 @@
 
 #include "lem-in.h"
 
+void	join_to_g_input_str(char *s)
+{
+	if (*s)
+	{
+		while (*s)
+			g_input_str[g_input_size++] = *(s++);
+		g_input_str[g_input_size++] = '\n';
+		g_input_str[g_input_size] = '\0';
+	}
+}
+
 void		reading_and_check_valid(int fd, t_p *par)
 {
 	char	*line;
@@ -24,6 +35,7 @@ void		reading_and_check_valid(int fd, t_p *par)
 	name2 = NULL;
 	while (get_next_line(fd, &line) > 0)
 	{
+		join_to_g_input_str(line);
 		// check_valid
 		if (!ft_strncmp(line, "##", 2))
 		{

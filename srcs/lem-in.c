@@ -274,7 +274,6 @@ void		print_output(t_output *output)
 	tmp_output = output;
 	while (tmp_output)
 	{
-		// printf("in print ant_num = %d\n", tmp_output->ant_num);
 		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 		tmp_output = tmp_output->next;
 	}
@@ -283,16 +282,30 @@ void		print_output(t_output *output)
 
 void		update_output(t_p *par, t_output **output)
 {
-	t_w			*way_point;
 	t_output	*tmp_output;
+	t_output	*next_output;
 
-	way_point = (*output)->way_point;
-	while (*output && way_point->r == par->end)
+	while (*output)
 	{
+		if ((*output)->way_point->r != par->end)
+			break ;
 		tmp_output = *output;
 		*output = (*output)->next;
-		way_point = (*output)->way_point;
 		free(tmp_output);
+	}
+	tmp_output = *output;
+	if (tmp_output)
+	{
+		while (tmp_output->next)
+		{
+			next_output = tmp_output->next;
+			if (next_output->way_point->r == par->end)
+			{
+				tmp_output->next = next_output->next;
+				free(next_output);
+			}
+			tmp_output = tmp_output->next;
+		}
 	}
 	tmp_output = *output;
 	while (tmp_output)
@@ -308,40 +321,43 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 	int			ant_num;
 	int			i;
 	t_output	*output;
+	int			count_str;
 
+	join_to_g_input_str("\n");
+	write(1, g_input_str, g_input_size);
 	ants = par->ants_num;
 	ant_num = 1;
 	output = NULL;
 	i = 0;
 	while (i < n_ways)
 	{
-		printf("ants = %d k = %d\n", ants, ways[i]->k);
 		if (ants > ways[i]->k)
 		{
-			printf("in add\n");
 			--ants;
 			add_output(&output, ant_num++, ways[i]->way->next);
 		}
 		++i;
 	}
 	print_output(output);
-	while (ants)
+	count_str = 1;
+	update_output(par, &output);
+	while (output)
 	{
-		update_output(par, &output);
 		i = 0;
-		while (i < n_ways)
+		while (ants && i < n_ways)
 		{
-			printf("ants = %d k = %d\n", ants, ways[i]->k);
 			if (ants > ways[i]->k)
 			{
-				printf("in add\n");
 				--ants;
 				add_output(&output, ant_num++, ways[i]->way->next);
 			}
 			++i;
 		}
 		print_output(output);
+		++count_str;
+		update_output(par, &output);
 	}
+	printf("\ncount_str = %d\n", count_str);
 }
 
 void		solve(t_p *par)
@@ -367,7 +383,6 @@ void		solve(t_p *par)
 		if (!check_usefull(par, ways, n_ways))
 			break ;
 	}
-	// output by sent_ant_with_check
 	shape_output(par, ways, n_ways);
 }
 
@@ -377,11 +392,12 @@ int			main(void)
 	int	fd;
 
 	par = create_par();
-	fd = open("/Users/pnita/my_work/lem-in/kek4", O_RDWR);
+	// fd = open("/Users/pnita/my_work/lem-in/kek1", O_RDWR);
+	fd = 0;
+	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
+	g_input_size = 0;
+	g_input_str[g_input_size] = '\0';
 	reading_and_check_valid(fd, par);
-	// printf("start room = %s\n", par->start->name);
-	// printf("end room = %s\n", par->end->name);
-	// printf("rooms_num_read = %d rooms_num_fact = %d\n", par->rooms_num_read, par->rooms_num_fact);
 	solve(par);
 	// delete
 	free(par->r);

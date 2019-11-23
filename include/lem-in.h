@@ -18,13 +18,12 @@
 # include <../libft/libft.h>
 
 #define	R_SIZE 100
+#define	G_INPUT_STR_SIZE 100000
 
 typedef struct		s_links
 {
 	char			*name;
 	int				not_active;
-	// int				from_in;
-	// int				weight;
 	struct s_links	*next;
 }					t_l;
 
@@ -33,7 +32,6 @@ typedef struct		s_room
 	char			*name;
 	struct s_room	*same_num;
 	t_l				*links;
-	// int				rev;
 	struct s_room	*room_in;
 	struct s_room	*room_out;
 	struct s_room	*next_in_q;
@@ -77,6 +75,9 @@ typedef struct		s_output
 	struct s_output	*next;
 }					t_output;
 
+char				*g_input_str;
+int					g_input_size;
+
 t_p					*create_par();
 size_t				hash(char *input);
 t_r					*create_room(char *name, t_p *par);
@@ -86,6 +87,7 @@ void				add_link(t_r *r, char *name);
 void				add_way_link(t_r *r, char *name);
 void				delete_way_link(t_r *room);
 t_r					*find_r(t_p *p, char *name);
+void				join_to_g_input_str(char *s);
 void				reading_and_check_valid(int fd, t_p *par);
 void				add_r_in_queque(t_r *queque, t_r *r_to_add);
 t_w					*create_way(t_r *r);
