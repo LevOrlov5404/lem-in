@@ -267,20 +267,7 @@ void		add_output(t_output **output, int ant_num, t_w *way_point)
 	}
 }
 
-void		print_output(t_output *output)
-{
-	t_output	*tmp_output;
-
-	tmp_output = output;
-	while (tmp_output)
-	{
-		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
-		tmp_output = tmp_output->next;
-	}
-	printf("\n");
-}
-
-void		update_output(t_p *par, t_output **output)
+void		print_output(t_p *par, t_output **output)
 {
 	t_output	*tmp_output;
 	t_output	*next_output;
@@ -290,15 +277,23 @@ void		update_output(t_p *par, t_output **output)
 		if ((*output)->way_point->r != par->end)
 			break ;
 		tmp_output = *output;
+		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 		*output = (*output)->next;
 		free(tmp_output);
 	}
 	tmp_output = *output;
 	if (tmp_output)
 	{
+		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 		while (tmp_output->next)
 		{
 			next_output = tmp_output->next;
+			if (!next_output->way_point)
+			{
+				printf("\n no way_point in next_output->ant_num = %d\n", next_output->ant_num);
+				exit (0);
+			}
+			printf("L%d-%s ", next_output->ant_num, next_output->way_point->r->name);
 			if (next_output->way_point->r == par->end)
 			{
 				tmp_output->next = next_output->next;
@@ -307,12 +302,56 @@ void		update_output(t_p *par, t_output **output)
 			tmp_output = tmp_output->next;
 		}
 	}
-	tmp_output = *output;
+	printf("\n");
+}
+
+void		update_output(t_p *par, t_output *output)
+{
+	t_output	*tmp_output;
+	t_output	*next_output;
+
+	// while (*output)
+	// {
+	// 	if ((*output)->way_point->r != par->end)
+	// 		break ;
+	// 	tmp_output = *output;
+	// 	*output = (*output)->next;
+	// 	free(tmp_output);
+	// }
+	// tmp_output = *output;
+	// if (tmp_output)
+	// {
+	// 	while (tmp_output->next)
+	// 	{
+	// 		next_output = tmp_output->next;
+	// 		if (next_output->way_point->r == par->end)
+	// 		{
+	// 			tmp_output->next = next_output->next;
+	// 			free(next_output);
+	// 		}
+	// 		tmp_output = tmp_output->next;
+	// 	}
+	// }
+	tmp_output = output;
 	while (tmp_output)
 	{
 		tmp_output->way_point = tmp_output->way_point->next;
 		tmp_output = tmp_output->next;
 	}
+	// tmp_output = *output;
+	// if (tmp_output)
+	// {
+	// 	while (tmp_output->next)
+	// 	{
+	// 		next_output = tmp_output->next;
+	// 		if (next_output->way_point->r == par->end)
+	// 		{
+	// 			tmp_output->next = next_output->next;
+	// 			free(next_output);
+	// 		}
+	// 		tmp_output = tmp_output->next;
+	// 	}
+	// }
 }
 
 void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
@@ -323,8 +362,6 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 	t_output	*output;
 	int			count_str;
 
-	join_to_g_input_str("\n");
-	write(1, g_input_str, g_input_size);
 	ants = par->ants_num;
 	ant_num = 1;
 	output = NULL;
@@ -338,9 +375,9 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 		}
 		++i;
 	}
-	print_output(output);
+	print_output(par, &output);
 	count_str = 1;
-	update_output(par, &output);
+	update_output(par, output);
 	while (output)
 	{
 		i = 0;
@@ -353,9 +390,9 @@ void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
 			}
 			++i;
 		}
-		print_output(output);
+		print_output(par, &output);
 		++count_str;
-		update_output(par, &output);
+		update_output(par, output);
 	}
 	printf("\ncount_str = %d\n", count_str);
 }
@@ -367,6 +404,7 @@ void		solve(t_p *par)
 	t_w		*new_way;
 	int		n_ways;
 
+	// printf("in solve\n");
 	new_way = bfs(par);
 	reverse_way(new_way, par);
 	clear_after_bfs(par);
@@ -383,6 +421,8 @@ void		solve(t_p *par)
 		if (!check_usefull(par, ways, n_ways))
 			break ;
 	}
+	join_to_g_input_str("\n");
+	write(1, g_input_str, g_input_size);
 	shape_output(par, ways, n_ways);
 }
 
@@ -392,8 +432,8 @@ int			main(void)
 	int	fd;
 
 	par = create_par();
-	// fd = open("/Users/pnita/my_work/lem-in/kek1", O_RDWR);
-	fd = 0;
+	fd = open("/Users/pnita/my_work/git_lem-in/flow-thousand", O_RDONLY);
+	// fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';

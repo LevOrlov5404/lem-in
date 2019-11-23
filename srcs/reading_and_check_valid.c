@@ -30,6 +30,7 @@ void		reading_and_check_valid(int fd, t_p *par)
 	char	*name2;
 	int		i;
 
+	// printf("in reading\n");
 	line = NULL;
 	name = NULL;
 	name2 = NULL;
