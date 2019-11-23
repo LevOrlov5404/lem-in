@@ -281,23 +281,30 @@ void		print_output(t_p *par, t_output **output)
 		*output = (*output)->next;
 		free(tmp_output);
 	}
-	tmp_output = *output;
-	if (tmp_output)
+	if (*output)
 	{
-		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
+		tmp_output = *output;
+		while (tmp_output)
+		{
+			if (!tmp_output->way_point)
+			{
+				printf("\n %d\n", tmp_output->ant_num);
+				exit (1);
+			}
+			printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
+			tmp_output = tmp_output->next;
+		}
+		tmp_output = *output;
 		while (tmp_output->next)
 		{
 			next_output = tmp_output->next;
-			if (!next_output->way_point)
-			{
-				printf("\n no way_point in next_output->ant_num = %d\n", next_output->ant_num);
-				exit (0);
-			}
-			printf("L%d-%s ", next_output->ant_num, next_output->way_point->r->name);
 			if (next_output->way_point->r == par->end)
 			{
-				tmp_output->next = next_output->next;
-				free(next_output);
+				if (next_output->way_point->r == par->end)
+				{
+					tmp_output->next = next_output->next;
+					free(next_output);
+				}
 			}
 			tmp_output = tmp_output->next;
 		}
