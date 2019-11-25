@@ -17,7 +17,7 @@
 # include <stdio.h>
 # include <../libft/libft.h>
 
-#define	R_SIZE 100000
+#define	ROOMS_SIZE 100000
 #define	G_INPUT_STR_SIZE 100000
 
 typedef struct		s_links

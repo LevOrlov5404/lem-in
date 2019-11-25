@@ -81,7 +81,9 @@ void		reading_and_check_valid(int fd, t_p *par)
 					// printf("%s link = %s\n", name, find_r(par, name)->links->name);
 					add_link(find_r(par, name2), name);
 					// printf("%s link = %s\n", name2, find_r(par, name2)->links->name);
+					ft_strdel(&name2);
 				}
+				ft_strdel(&name);
 			}
 		}
 		ft_strdel(&line);

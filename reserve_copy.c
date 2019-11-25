@@ -12,7 +12,7 @@
 
 #include "lem-in.h"
 
-#define	R_SIZE 10000
+#define	ROOMS_SIZE 10000
 
 typedef struct		s_links
 {
@@ -71,7 +71,7 @@ t_p			*create_par()
 	int	i;
 
 	par = (t_p*)ft_memalloc(sizeof(t_p));
-	par->r_len = R_SIZE;
+	par->r_len = ROOMS_SIZE;
 	par->r = (t_r**)ft_memalloc(sizeof(t_r*) * par->r_len);
 	return (par);
 }
@@ -85,7 +85,7 @@ size_t		hash(char *input)
 	{
 		hash_num = hash_num * 3 + *(input++);
 	}
-	return hash_num % R_SIZE;
+	return hash_num % ROOMS_SIZE;
 }
 
 t_r			*create_room(char *name, t_p *par)

@@ -283,36 +283,9 @@ void		print_output(t_p *par, t_output **output)
 	}
 	if (*output)
 	{
-		// printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
-		// while (tmp_output->next)
-		// {
-		// 	next_output = tmp_output->next;
-		// 	if (!next_output->way_point)
-		// 	{
-		// 		printf("\n no way_point in next_output->ant_num = %d\n", next_output->ant_num);
-		// 		exit (0);
-		// 	}
-		// 	printf("L%d-%s ", next_output->ant_num, next_output->way_point->r->name);
-		// 	if (next_output->way_point->r == par->end)
-		// 	{
-		// 		do
-		// 		{
-		// 			ptr_output = next_output;
-		// 			next_output = next_output->next;
-		// 			free(ptr_output);
-		// 		} while (next_output->way_point->r == par->end;
-		// 		tmp_output->next = next_output;
-		// 	}
-		// 	tmp_output = tmp_output->next;
-		// }
 		tmp_output = *output;
 		while (tmp_output)
 		{
-			if (!tmp_output->way_point)
-			{
-				printf("\n %d\n", tmp_output->ant_num);
-				exit (1);
-			}
 			printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 			tmp_output = tmp_output->next;
 		}
@@ -414,6 +387,7 @@ void		solve(t_p *par)
 		reverse_way(new_way, par);
 		next_ways = change_ways(par, ways, n_ways++, new_way);
 		set_ways_len_and_sort(next_ways, n_ways);
+		// delete old ways and new_way
 		ways = next_ways;
 		if (!check_usefull(par, ways, n_ways))
 			break ;
@@ -423,13 +397,66 @@ void		solve(t_p *par)
 	shape_output(par, ways, n_ways);
 }
 
+void		delete_links(t_l **links)
+{
+	t_l	*link;
+	t_l	*ptr_link;
+
+	link = *links;
+	while (link)
+	{
+		ptr_link = link->next;
+		ft_strdel(&link->name);
+		free(link);
+		link = ptr_link;
+	}
+	*links = NULL;
+}
+
+void		delete_room(t_r **room)
+{
+	ft_strdel(&(*room)->name);
+	delete_links(&(*room)->links);
+	delete_links(&(*room)->way_links);
+	*room = NULL;
+}
+
+void		delete_rooms(t_p *par)
+{
+	int	i;
+	t_r	*room;
+	t_r *ptr_room;
+
+	i = 0;
+	while (i < ROOMS_SIZE)
+	{
+		if (par->r[i])
+		{
+			room = par->r[i];
+			while (room->same_num)
+			{
+				ptr_room = room->same_num;
+				if (room->room_out)
+					delete_room(&room->room_out);
+				delete_room(&room);
+				room = ptr_room;
+			}
+			if (room->room_out)
+				delete_room(&room->room_out);
+			delete_room(&room);
+		}
+		++i;
+	}
+	free(par->r);
+	par->r = NULL;
+}
+
 int			main(void)
 {
 	t_p		*par;
 	int	fd;
 
 	par = create_par();
-	// fd = open("/home/lev/mywork/lem-in/kek1", O_RDONLY);
 	// fd = open("/home/lev/mywork/lem-in/big-superposition", O_RDONLY);
 	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
@@ -438,8 +465,7 @@ int			main(void)
 	reading_and_check_valid(fd, par);
 	solve(par);
 	// delete
-	free(par->r);
-	par->r = NULL;
+	delete_rooms(par);
 	free(par);
 	par = NULL;
 	return (0);
