@@ -15,8 +15,7 @@
 void	print_way(t_w *way, t_p *par)
 {
 	t_r	*tmp_r;
-	
-	printf("%d steps way: ", par->end->steps_in_q);
+
 	while (way)
 	{
 		printf("%s->", way->r->name);
@@ -271,6 +270,7 @@ void		print_output(t_p *par, t_output **output)
 {
 	t_output	*tmp_output;
 	t_output	*next_output;
+	t_output	*ptr_output;
 
 	while (*output)
 	{
@@ -283,6 +283,28 @@ void		print_output(t_p *par, t_output **output)
 	}
 	if (*output)
 	{
+		// printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
+		// while (tmp_output->next)
+		// {
+		// 	next_output = tmp_output->next;
+		// 	if (!next_output->way_point)
+		// 	{
+		// 		printf("\n no way_point in next_output->ant_num = %d\n", next_output->ant_num);
+		// 		exit (0);
+		// 	}
+		// 	printf("L%d-%s ", next_output->ant_num, next_output->way_point->r->name);
+		// 	if (next_output->way_point->r == par->end)
+		// 	{
+		// 		do
+		// 		{
+		// 			ptr_output = next_output;
+		// 			next_output = next_output->next;
+		// 			free(ptr_output);
+		// 		} while (next_output->way_point->r == par->end;
+		// 		tmp_output->next = next_output;
+		// 	}
+		// 	tmp_output = tmp_output->next;
+		// }
 		tmp_output = *output;
 		while (tmp_output)
 		{
@@ -302,8 +324,13 @@ void		print_output(t_p *par, t_output **output)
 			{
 				if (next_output->way_point->r == par->end)
 				{
-					tmp_output->next = next_output->next;
-					free(next_output);
+					do
+					{
+						ptr_output = next_output;
+						next_output = next_output->next;
+						free(ptr_output);
+					} while (next_output->way_point->r == par->end);
+					tmp_output->next = next_output;
 				}
 			}
 			tmp_output = tmp_output->next;
@@ -317,48 +344,12 @@ void		update_output(t_p *par, t_output *output)
 	t_output	*tmp_output;
 	t_output	*next_output;
 
-	// while (*output)
-	// {
-	// 	if ((*output)->way_point->r != par->end)
-	// 		break ;
-	// 	tmp_output = *output;
-	// 	*output = (*output)->next;
-	// 	free(tmp_output);
-	// }
-	// tmp_output = *output;
-	// if (tmp_output)
-	// {
-	// 	while (tmp_output->next)
-	// 	{
-	// 		next_output = tmp_output->next;
-	// 		if (next_output->way_point->r == par->end)
-	// 		{
-	// 			tmp_output->next = next_output->next;
-	// 			free(next_output);
-	// 		}
-	// 		tmp_output = tmp_output->next;
-	// 	}
-	// }
 	tmp_output = output;
 	while (tmp_output)
 	{
 		tmp_output->way_point = tmp_output->way_point->next;
 		tmp_output = tmp_output->next;
 	}
-	// tmp_output = *output;
-	// if (tmp_output)
-	// {
-	// 	while (tmp_output->next)
-	// 	{
-	// 		next_output = tmp_output->next;
-	// 		if (next_output->way_point->r == par->end)
-	// 		{
-	// 			tmp_output->next = next_output->next;
-	// 			free(next_output);
-	// 		}
-	// 		tmp_output = tmp_output->next;
-	// 	}
-	// }
 }
 
 void		shape_output(t_p *par, t_w_with_len **ways, int n_ways)
@@ -414,7 +405,6 @@ void		solve(t_p *par)
 	// printf("in solve\n");
 	new_way = bfs(par);
 	reverse_way(new_way, par);
-	clear_after_bfs(par);
 	n_ways = 1;
 	ways = create_ways(n_ways);
 	ways[0]->way = new_way;
@@ -439,8 +429,9 @@ int			main(void)
 	int	fd;
 
 	par = create_par();
-	fd = open("/Users/pnita/my_work/git_lem-in/flow-thousand", O_RDONLY);
-	// fd = 0;
+	// fd = open("/home/lev/mywork/lem-in/kek1", O_RDONLY);
+	// fd = open("/home/lev/mywork/lem-in/big-superposition", O_RDONLY);
+	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';

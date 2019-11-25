@@ -74,7 +74,7 @@ t_w		    *bfs(t_p *p)
 			p->meet_end = 1;
 			break ;
 		}
-		if (queque->room_in && !queque->room_in->steps_in_q)
+		if (queque->room_in && !queque->room_in->steps_in_q && !queque->moved_inside)
 		{
 			tmp_r = queque->room_in;
 			tmp_r->steps_in_q = queque->steps_in_q;
@@ -116,6 +116,16 @@ t_w		    *bfs(t_p *p)
 	return (get_way(p));
 }
 
+void		set_link_not_active(t_r *room, char *link_name)
+{
+	t_l	*tmp_link;
+	
+	tmp_link = room->links;
+	while (ft_strcmp(tmp_link->name, link_name))
+		tmp_link = tmp_link->next;
+	tmp_link->not_active = 1;
+}
+
 void		reverse_way(t_w *way, t_p *par)
 {
 	t_w	*w;
@@ -135,18 +145,21 @@ void		reverse_way(t_w *way, t_p *par)
 	{
 		w = next_w;
 		next_w = next_w->next;
-		tmp_link = w->r->links;
-		if (!w->r->room_out)
+		if (w->r->room_in && !ft_strcmp(w->r->name, next_w->r->name)) // try check if it is alreade reverse room, and than not reverse 
 		{
-			while (ft_strcmp(tmp_link->name, next_w->r->name))
-				tmp_link = tmp_link->next;
+			w->r->moved_inside = 1;
 		}
-		tmp_link->not_active = 1;
-		room_out = create_room(w->r->name, par);
-		room_out->links = w->r->links;
-		room_out->room_in = w->r;
-		w->r->room_out = room_out;
-		w->r->links = create_link(r_name_before);
+		else
+			set_link_not_active(w->r, next_w->r->name);
+		if (!w->r->room_out && !w->r->room_in)
+		{
+			room_out = create_room(w->r->name, par); // not create room_out if it already exist
+			room_out->links = w->r->links;
+			room_out->room_in = w->r;
+			w->r->room_out = room_out;
+			w->r->links = NULL;
+		}
+		add_link(w->r, r_name_before); // ? add link because it can be more than one
 		r_name_before = w->r->name;
 	}
 }

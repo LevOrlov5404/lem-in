@@ -34,6 +34,7 @@ typedef struct		s_room
 	t_l				*links;
 	struct s_room	*room_in;
 	struct s_room	*room_out;
+	int				moved_inside;
 	struct s_room	*next_in_q;
 	struct s_room	*prev_in_q;
 	int				was_in_q;
@@ -98,5 +99,6 @@ t_w					*bfs(t_p *p);
 void				clear_after_bfs(t_p *par);
 void				reverse_way(t_w *way, t_p *par);
 int					len_of_way(t_w *way);
+void				print_way(t_w *way, t_p *par);
 
 #endif
