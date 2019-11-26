@@ -12,12 +12,12 @@
 
 #include "lem-in.h"
 
-void	    clear_after_bfs(t_p *par)
+void	    clear_after_bfs(t_lem *lem)
 {
 	t_r	*r;
 	t_r	*next_r;
 
-	r = par->start;
+	r = lem->start;
 	next_r = r->next_in_q;
 	while (next_r)
 	{
@@ -32,10 +32,10 @@ void	    clear_after_bfs(t_p *par)
 	r->was_in_q = 0;
 	r->next_in_q = NULL;
 	r->prev_in_q = NULL;
-	par->meet_end = 0;
+	lem->meet_end = 0;
 }
 
-t_w		    *get_way(t_p *p)
+t_w		    *get_way(t_lem *p)
 {
 	t_r	*queque;
 	t_r	*tmp_r;
@@ -56,7 +56,7 @@ t_w		    *get_way(t_p *p)
 	return (way);
 }
 
-t_w		    *bfs(t_p *p)
+t_w		    *bfs(t_lem *p)
 {
 	t_r	*queque;
 	t_r	*tmp_r;
@@ -126,7 +126,7 @@ void		set_link_not_active(t_r *room, char *link_name)
 	tmp_link->not_active = 1;
 }
 
-void		reverse_way(t_w *way, t_p *par)
+void		reverse_way(t_w *way, t_lem *lem)
 {
 	t_w	*w;
 	t_w	*next_w;
@@ -141,7 +141,7 @@ void		reverse_way(t_w *way, t_p *par)
 		tmp_link = tmp_link->next;
 	tmp_link->not_active = 1;
 	r_name_before = w->r->name;
-	while (next_w->r != par->end)
+	while (next_w->r != lem->end)
 	{
 		w = next_w;
 		next_w = next_w->next;
@@ -153,7 +153,7 @@ void		reverse_way(t_w *way, t_p *par)
 			set_link_not_active(w->r, next_w->r->name);
 		if (!w->r->room_out && !w->r->room_in)
 		{
-			room_out = create_room(w->r->name, par); // not create room_out if it already exist
+			room_out = create_room(w->r->name, lem); // not create room_out if it already exist
 			room_out->links = w->r->links;
 			room_out->room_in = w->r;
 			w->r->room_out = room_out;

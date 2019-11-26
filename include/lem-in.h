@@ -13,9 +13,7 @@
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <../libft/libft.h>
+# include "../ft_printf/include/ft_printf.h"
 
 #define	ROOMS_SIZE 100000
 #define	G_INPUT_STR_SIZE 100000
@@ -42,7 +40,7 @@ typedef struct		s_room
 	t_l				*way_links;
 }					t_r;
 
-typedef struct		s_par
+typedef struct		s_lem
 {
 	t_r				**r;
 	int				r_len;
@@ -54,7 +52,7 @@ typedef struct		s_par
 	t_r				*start;
 	t_r				*end;
 	int				meet_end;
-}					t_p;
+}					t_lem;
 
 typedef struct		s_way
 {
@@ -79,26 +77,26 @@ typedef struct		s_output
 char				*g_input_str;
 int					g_input_size;
 
-t_p					*create_par();
+t_lem					*create_lem();
 size_t				hash(char *input);
-t_r					*create_room(char *name, t_p *par);
-void				add_same_num_room(t_r *r, char *name, t_p *par);
+t_r					*create_room(char *name, t_lem *lem);
+void				add_same_num_room(t_r *r, char *name, t_lem *lem);
 t_l					*create_link(char *name);
 void				add_link(t_r *r, char *name);
 void				add_way_link(t_r *r, char *name);
 void				delete_way_link(t_r *room);
-t_r					*find_r(t_p *p, char *name);
+t_r					*find_r(t_lem *p, char *name);
 void				join_to_g_input_str(char *s);
-void				reading_and_check_valid(int fd, t_p *par);
+void				reading_and_check_valid(int fd, t_lem *lem);
 void				add_r_in_queque(t_r *queque, t_r *r_to_add);
 t_w					*create_way(t_r *r);
 void				push_to_begin_w(t_w **way, t_r *r);
 void				add_way(t_w *way, t_r *r);
-t_w					*get_way(t_p *p);
-t_w					*bfs(t_p *p);
-void				clear_after_bfs(t_p *par);
-void				reverse_way(t_w *way, t_p *par);
+t_w					*get_way(t_lem *p);
+t_w					*bfs(t_lem *p);
+void				clear_after_bfs(t_lem *lem);
+void				reverse_way(t_w *way, t_lem *lem);
 int					len_of_way(t_w *way);
-void				print_way(t_w *way, t_p *par);
+void				print_way(t_w *way, t_lem *lem);
 
 #endif

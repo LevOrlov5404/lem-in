@@ -20,15 +20,15 @@ SRCS = $(addprefix $(DIR_S)/,$(SOURCES))
 OBJS = $(addprefix $(DIR_O)/,$(SOURCES:.c=.o))
 all: $(NAME)
 $(NAME): $(OBJS)
-	@make -C libft
-	@gcc -o $(NAME) $(FLAGS) $(OBJS) libft/libft.a
+	@make -C ft_printf
+	@gcc -o $(NAME) $(FLAGS) $(OBJS) ft_printf/libftprintf.a
 $(DIR_O)/%.o: $(DIR_S)/%.c
 	@mkdir -p objs
 	@gcc $(FLAGS) -I $(HEADER) -o $@ -c $<
 clean:
-	@make clean -C libft
+	@make clean -C ft_printf
 	@rm -rf $(DIR_O)
 fclean: clean
-	@make fclean -C libft
+	@make fclean -C ft_printf
 	@rm -f $(NAME)
 re: fclean all

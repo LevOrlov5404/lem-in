@@ -23,7 +23,7 @@ void	join_to_g_input_str(char *s)
 	}
 }
 
-void		reading_and_check_valid(int fd, t_p *par)
+void		reading_and_check_valid(int fd, t_lem *lem)
 {
 	char	*line;
 	char	*name;
@@ -41,9 +41,9 @@ void		reading_and_check_valid(int fd, t_p *par)
 		if (!ft_strncmp(line, "##", 2))
 		{
 			if (!ft_strncmp(line, "##start", 7))
-				par->is_start = 1;
+				lem->is_start = 1;
 			else if (!ft_strncmp(line, "##end", 5))
-				par->is_end = 1;
+				lem->is_end = 1;
 		}
 		else if (!ft_strncmp(line, "#", 1))
 		{
@@ -55,7 +55,7 @@ void		reading_and_check_valid(int fd, t_p *par)
 			while (line[i] && line[i] != ' ' && line[i] != '-')
 				++i;
 			if (!line[i]) // check that only numbers
-				par->ants_num = ft_atoi(line);
+				lem->ants_num = ft_atoi(line);
 			else
 			{
 				name = ft_strsub(line, 0, i); // delete
@@ -63,24 +63,24 @@ void		reading_and_check_valid(int fd, t_p *par)
 				if (line[i] == ' ')
 				{
 					// printf("____in create rooms\n");
-					++par->rooms_num;
-					par->h_i = hash(name);
-					// printf("h_i of room %s = %zu\n", name, par->h_i);
-					if (!par->r[par->h_i])
-						par->r[par->h_i] = create_room(name, par);
+					++lem->rooms_num;
+					lem->h_i = hash(name);
+					// printf("h_i of room %s = %zu\n", name, lem->h_i);
+					if (!lem->r[lem->h_i])
+						lem->r[lem->h_i] = create_room(name, lem);
 					else
-						add_same_num_room(par->r[par->h_i], name, par);
-					par->is_start = 0;
-					par->is_end = 0;
+						add_same_num_room(lem->r[lem->h_i], name, lem);
+					lem->is_start = 0;
+					lem->is_end = 0;
 				}
 				else if (line[i] == '-')
 				{
 					// printf("____in create links____\n");
 					name2 = ft_strdup(line + i + 1);
-					add_link(find_r(par, name), name2);
-					// printf("%s link = %s\n", name, find_r(par, name)->links->name);
-					add_link(find_r(par, name2), name);
-					// printf("%s link = %s\n", name2, find_r(par, name2)->links->name);
+					add_link(find_r(lem, name), name2);
+					// printf("%s link = %s\n", name, find_r(lem, name)->links->name);
+					add_link(find_r(lem, name2), name);
+					// printf("%s link = %s\n", name2, find_r(lem, name2)->links->name);
 					ft_strdel(&name2);
 				}
 				ft_strdel(&name);

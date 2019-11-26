@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prepare.c                                          :+:      :+:    :+:   */
+/*   preleme.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pnita <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,15 +12,15 @@
 
 #include "lem-in.h"
 
-t_p			*create_par()
+t_lem			*create_lem()
 {
-	t_p	*par;
+	t_lem	*lem;
 	int	i;
 
-	par = (t_p*)ft_memalloc(sizeof(t_p));
-	par->r_len = ROOMS_SIZE;
-	par->r = (t_r**)ft_memalloc(sizeof(t_r*) * par->r_len);
-	return (par);
+	lem = (t_lem*)ft_memalloc(sizeof(t_lem));
+	lem->r_len = ROOMS_SIZE;
+	lem->r = (t_r**)ft_memalloc(sizeof(t_r*) * lem->r_len);
+	return (lem);
 }
 
 size_t		hash(char *input)
@@ -35,30 +35,30 @@ size_t		hash(char *input)
 	return hash_num % ROOMS_SIZE;
 }
 
-t_r			*create_room(char *name, t_p *par)
+t_r			*create_room(char *name, t_lem *lem)
 {
 	t_r		*r;
 
 	r = (t_r*)ft_memalloc(sizeof(t_r));
 	r->name = ft_strdup(name);
-	if (par->is_start)
-		par->start = r;
-	if (par->is_end)
-		par->end = r;
+	if (lem->is_start)
+		lem->start = r;
+	if (lem->is_end)
+		lem->end = r;
 	return (r);
 }
 
-void		add_same_num_room(t_r *r, char *name, t_p *par)
+void		add_same_num_room(t_r *r, char *name, t_lem *lem)
 {
 	t_r	*tmp_r;
 	
 	tmp_r = r;
 	while (tmp_r->same_num)
 		tmp_r = tmp_r->same_num;
-	tmp_r->same_num = create_room(name, par);
+	tmp_r->same_num = create_room(name, lem);
 }
 
-t_r			*find_r(t_p *p, char *name)
+t_r			*find_r(t_lem *p, char *name)
 {
 	t_r		*tmp_r;
 
