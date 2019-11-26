@@ -325,6 +325,37 @@ void		update_output(t_lem *lem, t_output *output)
 	}
 }
 
+void		delete_way(t_w **way)
+{
+	t_w	*tmp_way;
+	t_w	*ptr_way;
+
+	tmp_way = *way;
+	while (tmp_way)
+	{
+		ptr_way = tmp_way->next;
+		free(tmp_way);
+		tmp_way = ptr_way;
+	}
+	*way = NULL;
+}
+
+void		delete_ways(t_w_with_len ***ways, int n_ways)
+{
+	int	i;
+
+	i = 0;
+	while (i < n_ways)
+	{
+		delete_way(&(*ways)[i]->way);
+		free((*ways)[i]);
+		(*ways)[i] = NULL;
+		++i;
+	}
+	free(*ways);
+	*ways = NULL;
+}
+
 void		shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 {
 	int			ants;
@@ -362,7 +393,7 @@ void		shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 		print_output(lem, &output);
 		update_output(lem, output);
 	}
-	// printf("\ncount_str = %d\n", count_str);
+	delete_ways(&ways, n_ways);
 }
 
 void		solve(t_lem *lem)
@@ -385,10 +416,13 @@ void		solve(t_lem *lem)
 		next_ways = change_ways(lem, ways, n_ways++, new_way);
 		set_ways_len_and_sort(next_ways, n_ways);
 		// delete old ways and new_way
+		delete_way(&new_way);
+		delete_ways(&ways, n_ways - 1);
 		ways = next_ways;
 		if (!check_usefull(lem, ways, n_ways))
 			break ;
 	}
+	delete_way(&new_way);
 	g_input_str[g_input_size++] = '\n';
 	g_input_str[g_input_size] = '\0';
 	write(1, g_input_str, g_input_size);
@@ -413,9 +447,13 @@ void		delete_links(t_l **links)
 
 void		delete_room(t_r **room)
 {
-	ft_strdel(&(*room)->name);
-	delete_links(&(*room)->links);
-	delete_links(&(*room)->way_links);
+	if ((*room)->name)
+		ft_strdel(&(*room)->name);
+	if ((*room)->links)
+		delete_links(&(*room)->links);
+	if ((*room)->way_links)
+		delete_links(&(*room)->way_links);
+	free(*room);
 	*room = NULL;
 }
 
@@ -455,7 +493,7 @@ int			main(void)
 	int	fd;
 
 	lem = create_lem();
-	// fd = open("/home/lev/mywork/lem-in/big-superposition", O_RDONLY);
+	// fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
 	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;

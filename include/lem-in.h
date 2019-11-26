@@ -43,7 +43,6 @@ typedef struct		s_room
 typedef struct		s_lem
 {
 	t_r				**r;
-	int				r_len;
 	int				ants_num;
 	int				rooms_num;
 	size_t			h_i;

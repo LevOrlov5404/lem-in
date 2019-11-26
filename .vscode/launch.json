@@ -8,21 +8,13 @@
             "name": "gcc build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/lev/mywork/lem-in/lem-in",
+            "program": "/Users/pnita/my_work/git_lem-in/lem-in",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Включить автоматическое форматирование для gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "miDebuggerPath": "/usr/bin/gdb"
+            "MIMode": "lldb",
         }
     ]
 }

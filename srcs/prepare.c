@@ -18,8 +18,7 @@ t_lem			*create_lem()
 	int	i;
 
 	lem = (t_lem*)ft_memalloc(sizeof(t_lem));
-	lem->r_len = ROOMS_SIZE;
-	lem->r = (t_r**)ft_memalloc(sizeof(t_r*) * lem->r_len);
+	lem->r = (t_r**)ft_memalloc(sizeof(t_r*) * ROOMS_SIZE);
 	return (lem);
 }
 
