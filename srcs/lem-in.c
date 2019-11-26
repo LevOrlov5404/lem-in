@@ -18,10 +18,10 @@ void	print_way(t_w *way, t_lem *lem)
 
 	while (way)
 	{
-		printf("%s->", way->r->name);
+		ft_printf("%s->", way->r->name);
 		way = way->next;
 	}
-	printf("NULL\n");
+	ft_printf("NULL\n");
 }
 
 int		is_tmp_in_next(t_r *tmp, t_r *next)
@@ -194,7 +194,6 @@ void		set_ways_len_and_sort(t_w_with_len **ways, int n_ways)
 	while (i < n_ways)
 	{
 		ways[i]->len = len_of_way(ways[i]->way);
-		// printf("%d\n", ways[i]->len);
 		++i;
 	}
 	i = 0;
@@ -222,7 +221,6 @@ int		check_usefull(t_lem *lem, t_w_with_len **ways, int n_ways)
 	while (i < n_ways)
 	{
 		ways[i]->k = i * ways[i]->len - len_sum;
-		// printf("%d\n", ways[i]->k);
 		len_sum += ways[i]->len;
 		++i;
 	}
@@ -252,17 +250,13 @@ void		add_output(t_output **output, int ant_num, t_w *way_point)
 	t_output	*tmp_output;
 	
 	if (!*output)
-	{
 		*output = create_output(ant_num, way_point);
-		// printf("in add ant_num = %d\n", (*output)->ant_num);
-	}
 	else
 	{
 		tmp_output = *output;
 		while (tmp_output->next)
 			tmp_output = tmp_output->next;
 		tmp_output->next = create_output(ant_num, way_point);
-		// printf("in add ant_num = %d\n", tmp_output->next->ant_num);
 	}
 }
 
@@ -277,7 +271,7 @@ void		print_output(t_lem *lem, t_output **output)
 		if ((*output)->way_point->r != lem->end)
 			break ;
 		tmp_output = *output;
-		printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
+		ft_printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 		*output = (*output)->next;
 		free(tmp_output);
 	}
@@ -286,7 +280,7 @@ void		print_output(t_lem *lem, t_output **output)
 		tmp_output = *output;
 		while (tmp_output)
 		{
-			printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
+			ft_printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
 			tmp_output = tmp_output->next;
 		}
 		tmp_output = *output;
@@ -309,7 +303,7 @@ void		print_output(t_lem *lem, t_output **output)
 			tmp_output = tmp_output->next;
 		}
 	}
-	printf("\n");
+	ft_printf("\n");
 }
 
 void		update_output(t_lem *lem, t_output *output)
@@ -378,7 +372,7 @@ void		shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 	}
 	print_output(lem, &output);
 	update_output(lem, output);
-	while (output)
+	while (ants || output)
 	{
 		i = 0;
 		while (ants && i < n_ways)
@@ -403,7 +397,6 @@ void		solve(t_lem *lem)
 	t_w		*new_way;
 	int		n_ways;
 
-	// printf("in solve\n");
 	new_way = bfs(lem);
 	reverse_way(new_way, lem);
 	n_ways = 1;
@@ -415,7 +408,6 @@ void		solve(t_lem *lem)
 		reverse_way(new_way, lem);
 		next_ways = change_ways(lem, ways, n_ways++, new_way);
 		set_ways_len_and_sort(next_ways, n_ways);
-		// delete old ways and new_way
 		delete_way(&new_way);
 		delete_ways(&ways, n_ways - 1);
 		ways = next_ways;
@@ -487,22 +479,28 @@ void		delete_rooms(t_lem *lem)
 	lem->r = NULL;
 }
 
+void		delete_default(t_lem *lem)
+{
+	ft_strdel(&g_input_str);
+	delete_rooms(lem);
+	free(lem);
+	lem = NULL;
+}
+
 int			main(void)
 {
 	t_lem		*lem;
 	int	fd;
 
 	lem = create_lem();
+	fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
 	// fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
-	fd = 0;
+	// fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';
 	reading_and_check_valid(fd, lem);
 	solve(lem);
-	// delete
-	delete_rooms(lem);
-	free(lem);
-	lem = NULL;
+	delete_default(lem);
 	return (0);
 }

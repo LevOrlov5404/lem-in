@@ -57,11 +57,11 @@ void		add_same_num_room(t_r *r, char *name, t_lem *lem)
 	tmp_r->same_num = create_room(name, lem);
 }
 
-t_r			*find_r(t_lem *p, char *name)
+t_r			*find_r(t_lem *lem, char *name)
 {
 	t_r		*tmp_r;
 
-	tmp_r = p->r[hash(name)];
+	tmp_r = lem->r[hash(name)];
 	while (tmp_r && ft_strcmp(tmp_r->name, name))
 		tmp_r = tmp_r->same_num;
 	return (tmp_r);

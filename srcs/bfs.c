@@ -116,16 +116,6 @@ t_w		    *bfs(t_lem *p)
 	return (get_way(p));
 }
 
-void		set_link_not_active(t_r *room, char *link_name)
-{
-	t_l	*tmp_link;
-	
-	tmp_link = room->links;
-	while (ft_strcmp(tmp_link->name, link_name))
-		tmp_link = tmp_link->next;
-	tmp_link->not_active = 1;
-}
-
 void		reverse_way(t_w *way, t_lem *lem)
 {
 	t_w	*w;
@@ -136,9 +126,7 @@ void		reverse_way(t_w *way, t_lem *lem)
 
 	w = way;
 	next_w = w->next;
-	tmp_link = w->r->links;
-	while (ft_strcmp(tmp_link->name, next_w->r->name))
-		tmp_link = tmp_link->next;
+	tmp_link = find_link(w->r, next_w->r->name);
 	tmp_link->not_active = 1;
 	r_name_before = w->r->name;
 	while (next_w->r != lem->end)
@@ -146,11 +134,12 @@ void		reverse_way(t_w *way, t_lem *lem)
 		w = next_w;
 		next_w = next_w->next;
 		if (w->r->room_in && !ft_strcmp(w->r->name, next_w->r->name)) // try check if it is alreade reverse room, and than not reverse 
-		{
 			w->r->moved_inside = 1;
-		}
 		else
-			set_link_not_active(w->r, next_w->r->name);
+		{
+			tmp_link = find_link(w->r, next_w->r->name);
+			tmp_link->not_active = 1;
+		}
 		if (!w->r->room_out && !w->r->room_in)
 		{
 			room_out = create_room(w->r->name, lem); // not create room_out if it already exist

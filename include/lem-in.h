@@ -44,7 +44,6 @@ typedef struct		s_lem
 {
 	t_r				**r;
 	int				ants_num;
-	int				rooms_num;
 	size_t			h_i;
 	int 			is_start;
 	int 			is_end;
@@ -76,11 +75,13 @@ typedef struct		s_output
 char				*g_input_str;
 int					g_input_size;
 
-t_lem					*create_lem();
+t_lem				*create_lem();
+void				delete_default(t_lem *lem);
 size_t				hash(char *input);
 t_r					*create_room(char *name, t_lem *lem);
 void				add_same_num_room(t_r *r, char *name, t_lem *lem);
 t_l					*create_link(char *name);
+t_l					*find_link(t_r *room, char *name);
 void				add_link(t_r *r, char *name);
 void				add_way_link(t_r *r, char *name);
 void				delete_way_link(t_r *room);
