@@ -15,7 +15,7 @@
 
 # include "../ft_printf/include/ft_printf.h"
 
-#define	ROOMS_SIZE 100000
+#define	ROOMS_SIZE 10000
 #define	G_INPUT_STR_SIZE 100000
 
 typedef struct		s_links
@@ -87,6 +87,7 @@ void				add_way_link(t_r *r, char *name);
 void				delete_way_link(t_r *room);
 t_r					*find_r(t_lem *p, char *name);
 void				join_to_g_input_str(char *s);
+void				give_error(t_lem *lem, char **line);
 void				reading_and_check_valid(int fd, t_lem *lem);
 void				add_r_in_queque(t_r *queque, t_r *r_to_add);
 t_w					*create_way(t_r *r);

@@ -3,3 +3,5 @@ gcc -g -o lem-in srcs/*.c ft_printf/libftprintf.a -I include
 
 check-list:
 https://slack-files.com/files-pri-safe/TE6FVDN1Y-FQMKXD1H7/intra_projects_lem_in_edit__1_.pdf?c=1574518550-e3aed344e1c11412d52d739e09a4dad89ef67de3
+
+https://github.com/apft/42_lem-in_tools

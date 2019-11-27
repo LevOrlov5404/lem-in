@@ -24,7 +24,7 @@ void	print_way(t_w *way, t_lem *lem)
 	ft_printf("NULL\n");
 }
 
-int		is_tmp_in_next(t_r *tmp, t_r *next)
+int		tmp_not_in_next(t_r *tmp, t_r *next)
 {
 	t_l	*check_wl;
 
@@ -81,7 +81,7 @@ t_w		**change_ways_first(int n_ways, t_w **way, t_lem *lem)
 			while (tmp_wl && tmp_wl->not_active)
 				tmp_wl = tmp_wl->next;
 			next_r = find_r(lem, tmp_wl->name);
-			if (is_tmp_in_next(tmp_r, next_r))
+			if (tmp_not_in_next(tmp_r, next_r))
 			{
 				add_way(tmp_w, next_r);
 				tmp_r = next_r;
@@ -114,7 +114,7 @@ void				paste_way_link_at_r(t_w *way)
 	{
 		tmp_r = way->r;
 		next_r = way->next->r;
-		add_way_link(tmp_r->room_in ? tmp_r->room_in : tmp_r, next_r->name);
+		add_way_link((tmp_r->room_in ? tmp_r->room_in : tmp_r), next_r->name);
 		way = way->next;
 	}
 }
@@ -132,7 +132,7 @@ void				paste_way(t_lem *lem, t_w *way)
 		while (tmp_wl && tmp_wl->not_active)
 			tmp_wl = tmp_wl->next;
 		next_r = find_r(lem, tmp_wl->name);
-		if (is_tmp_in_next(tmp_r, next_r))
+		if (tmp_not_in_next(tmp_r, next_r))
 		{
 			add_way(way, next_r);
 			tmp_r = next_r;
@@ -156,6 +156,12 @@ void				clear_after_change_ways(t_lem *lem, t_w_with_len **ways, int n_ways, t_w
 			delete_way_link(tmp_w->r);
 			tmp_w = tmp_w->next;
 		}
+	}
+	tmp_w = new_way;
+	while (tmp_w->r != lem->end)
+	{
+		delete_way_link(tmp_w->r);
+		tmp_w = tmp_w->next;
 	}
 }
 
@@ -289,16 +295,13 @@ void		print_output(t_lem *lem, t_output **output)
 			next_output = tmp_output->next;
 			if (next_output->way_point->r == lem->end)
 			{
-				if (next_output->way_point->r == lem->end)
+				do
 				{
-					do
-					{
-						ptr_output = next_output;
-						next_output = next_output->next;
-						free(ptr_output);
-					} while (next_output->way_point->r == lem->end);
-					tmp_output->next = next_output;
-				}
+					ptr_output = next_output;
+					next_output = next_output->next;
+					free(ptr_output);
+				} while (next_output->way_point->r == lem->end);
+				tmp_output->next = next_output;
 			}
 			tmp_output = tmp_output->next;
 		}
@@ -361,17 +364,6 @@ void		shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 	ant_num = 1;
 	output = NULL;
 	i = 0;
-	while (i < n_ways)
-	{
-		if (ants > ways[i]->k)
-		{
-			--ants;
-			add_output(&output, ant_num++, ways[i]->way->next);
-		}
-		++i;
-	}
-	print_output(lem, &output);
-	update_output(lem, output);
 	while (ants || output)
 	{
 		i = 0;
@@ -397,7 +389,8 @@ void		solve(t_lem *lem)
 	t_w		*new_way;
 	int		n_ways;
 
-	new_way = bfs(lem);
+	if (!(new_way = bfs(lem)))
+		give_error(lem, NULL);
 	reverse_way(new_way, lem);
 	n_ways = 1;
 	ways = create_ways(n_ways);
@@ -493,9 +486,9 @@ int			main(void)
 	int	fd;
 
 	lem = create_lem();
-	fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
+	// fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
 	// fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
-	// fd = 0;
+	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';

@@ -42,7 +42,7 @@ t_r			*create_room(char *name, t_lem *lem)
 	r->name = ft_strdup(name);
 	if (lem->is_start)
 		lem->start = r;
-	if (lem->is_end)
+	else if (lem->is_end)
 		lem->end = r;
 	return (r);
 }
