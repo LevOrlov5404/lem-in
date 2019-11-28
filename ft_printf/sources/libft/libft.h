@@ -109,6 +109,6 @@ int					ft_is_equal(char *s1, char *s2);
 int					ft_len_before_delim(const char *s, char c);
 int					pos_of_n(char *s);
 int					get_next_line(const int fd, char **line);
-int					ft_str_only_digit(char *str);
+int					ft_strn_only_digit(char *str, int n);
 
 #endif
