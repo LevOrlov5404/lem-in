@@ -69,7 +69,7 @@ int		check_koord_only_digit(char *str)
 	ptr = str;
 	while (*ptr && *ptr != ' ')
 		++ptr;
-	if (!*ptr || ptr == str || !ft_strn_only_digit(str, ptr - str) || !ft_strn_only_digit(ptr + 1, -1))
+	if (!*ptr || !ft_strn_only_digit(str, ptr - str) || !ft_strn_only_digit(ptr + 1, -1))
 		return (0);
 	return (1);
 }
@@ -94,13 +94,13 @@ void		reading_and_check_valid(int fd, t_lem *lem)
 		join_to_g_input_str(line);
 		if (!ft_strcmp(line, "##start"))
 		{
-			if (lem->start)
+			if (lem->start || lem->is_start)
 				give_error(lem, &line);
 			lem->is_start = 1;
 		}
 		else if (!ft_strcmp(line, "##end"))
 		{
-			if (lem->end)
+			if (lem->end || lem->is_end)
 				give_error(lem, &line);
 			lem->is_end = 1;
 		}
