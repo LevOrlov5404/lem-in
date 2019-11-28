@@ -476,6 +476,7 @@ void		delete_default(t_lem *lem)
 {
 	ft_strdel(&g_input_str);
 	delete_rooms(lem);
+	// add delete koord
 	free(lem);
 	lem = NULL;
 }

@@ -19,6 +19,7 @@ t_lem			*create_lem()
 
 	lem = (t_lem*)ft_memalloc(sizeof(t_lem));
 	lem->r = (t_r**)ft_memalloc(sizeof(t_r*) * ROOMS_SIZE);
+	lem->koord = (t_koord**)ft_memalloc(sizeof(t_koord*) * ROOMS_SIZE);
 	return (lem);
 }
 
