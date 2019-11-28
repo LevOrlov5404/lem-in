@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int		ft_str_only_digit(char *str)
+int		ft_strn_only_digit(char *str, int n)
 {
 	char	*ptr;
 
@@ -22,6 +22,8 @@ int		ft_str_only_digit(char *str)
 		if (!ft_isdigit(*ptr))
 			return (0);
 		++ptr;
+		if (n != -1 && ptr == str + n)
+			break ;
 	}
 	return (1);
 }

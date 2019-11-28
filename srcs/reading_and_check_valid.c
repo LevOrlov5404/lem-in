@@ -52,7 +52,7 @@ void		read_and_valid_ants(int fd, t_lem *lem)
 			give_error(lem, &line);
 		if (line[0] != '#')
 		{
-			if (!ft_str_only_digit(line) || (lem->ants_num = ft_atoi(line)) <= 0) // check that only number, check that > 0
+			if (!ft_strn_only_digit(line, -1) || (lem->ants_num = ft_atoi(line)) <= 0) // check that only number, check that > 0
 				give_error(lem, &line);
 			ft_strdel(&line);
 			return ;
@@ -60,6 +60,18 @@ void		read_and_valid_ants(int fd, t_lem *lem)
 		else
 			ft_strdel(&line);
 	}
+}
+
+int		check_koord_only_digit(char *str)
+{
+	char	*ptr;
+
+	ptr = str;
+	while (*ptr && *ptr != ' ')
+		++ptr;
+	if (!*ptr || ptr == str || !ft_strn_only_digit(str, ptr - str) || !ft_strn_only_digit(ptr + 1, -1))
+		return (0);
+	return (1);
 }
 
 void		reading_and_check_valid(int fd, t_lem *lem)
@@ -80,13 +92,13 @@ void		reading_and_check_valid(int fd, t_lem *lem)
 	while (get_next_line(fd, &line) > 0)
 	{
 		join_to_g_input_str(line);
-		if (!ft_strncmp(line, "##start", 7))
+		if (!ft_strcmp(line, "##start"))
 		{
 			if (lem->start)
 				give_error(lem, &line);
 			lem->is_start = 1;
 		}
-		else if (!ft_strncmp(line, "##end", 5))
+		else if (!ft_strcmp(line, "##end"))
 		{
 			if (lem->end)
 				give_error(lem, &line);
@@ -104,12 +116,11 @@ void		reading_and_check_valid(int fd, t_lem *lem)
 				name = ft_strsub(line, 0, i);
 				if (line[i] == ' ')
 				{
-					if (flag == 2 || name[0] == 'L')
+					if (flag == 2 || name[0] == 'L' || !check_koord_only_digit(line + i + 1)) // check koordinates
 					{
 						ft_strdel(&name);
 						give_error(lem, &line);
 					}
-					// check koordinates
 					flag = 1;
 					lem->h_i = hash(name);
 					if (!lem->r[lem->h_i])
