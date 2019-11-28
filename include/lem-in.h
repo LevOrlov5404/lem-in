@@ -25,6 +25,13 @@ typedef struct		s_links
 	struct s_links	*next;
 }					t_l;
 
+typedef struct		s_koord
+{
+	int				x;
+	int				y;
+	struct s_koord	*same_koord;
+}					t_koord;
+
 typedef struct		s_room
 {
 	char			*name;
@@ -50,6 +57,7 @@ typedef struct		s_lem
 	t_r				*start;
 	t_r				*end;
 	int				meet_end;
+	t_koord			**koord;
 }					t_lem;
 
 typedef struct		s_way
