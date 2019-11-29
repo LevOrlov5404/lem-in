@@ -472,11 +472,31 @@ void		delete_rooms(t_lem *lem)
 	lem->r = NULL;
 }
 
+void		delete_koord(t_lem *lem)
+{
+	t_koord	*tmp_koord;
+	t_koord	*ptr_koord;
+	int		i;
+
+	i = 0;
+	while (i < ROOMS_SIZE)
+	{
+		tmp_koord = lem->koord[i++];
+		while (tmp_koord->same_koord)
+		{
+			ptr_koord = tmp_koord->same_koord;
+			free(tmp_koord);
+			tmp_koord = ptr_koord;
+		}
+		free(tmp_koord);
+	}
+}
+
 void		delete_default(t_lem *lem)
 {
 	ft_strdel(&g_input_str);
 	delete_rooms(lem);
-	// add delete koord
+	// delete_koord(lem);
 	free(lem);
 	lem = NULL;
 }
