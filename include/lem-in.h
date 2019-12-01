@@ -96,6 +96,7 @@ void				delete_way_link(t_r *room);
 t_r					*find_r(t_lem *p, char *name);
 void				join_to_g_input_str(char *s);
 void				give_error(t_lem *lem, char **line);
+int					check_koord_only_digit(t_lem *lem, char *str);
 void				reading_and_check_valid(int fd, t_lem *lem);
 void				add_r_in_queque(t_r *queque, t_r *r_to_add);
 t_w					*create_way(t_r *r);

@@ -67,3 +67,13 @@ void		delete_way_link(t_r *room)
 	}
 	room->way_links = NULL;
 }
+
+t_l			*find_link(t_r *room, char *name)
+{
+	t_l	*tmp_link;
+
+	tmp_link = room->links;
+	while (tmp_link && ft_strcmp(tmp_link->name, name))
+		tmp_link = tmp_link->next;
+	return (tmp_link);
+}
