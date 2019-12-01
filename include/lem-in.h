@@ -83,7 +83,7 @@ typedef struct		s_output
 char				*g_input_str;
 int					g_input_size;
 
-t_lem				*create_lem();
+t_lem				*create_lem(void);
 void				delete_default(t_lem *lem);
 size_t				hash(char *input);
 t_r					*create_room(char *name, t_lem *lem);
@@ -107,6 +107,22 @@ t_w					*bfs(t_lem *p);
 void				clear_after_bfs(t_lem *lem);
 void				reverse_way(t_w *way, t_lem *lem);
 int					len_of_way(t_w *way);
-void				print_way(t_w *way, t_lem *lem);
+int					tmp_not_in_next(t_r *tmp, t_r *next);
+t_w_with_len		**create_ways(int n);
+void				paste_way_link_at_r(t_w *way);
+void				paste_way(t_lem *lem, t_w *way);
+void				clear_after_change_ways(t_lem *lem, t_w_with_len **ways,
+					int n_ways, t_w *new_way);
+
+t_output			*create_output(int ant_num, t_w *way_point);
+void				add_output(t_output **output, int ant_num, t_w *way_point);
+void				print_output2(t_lem *lem, t_output **output);
+void				print_output(t_lem *lem, t_output **output);
+void				update_output(t_output *output);
+
+void				delete_links(t_l **links);
+void				delete_room(t_r **room);
+void				delete_rooms(t_lem *lem);
+void				delete_koord(t_lem *lem);
 
 #endif

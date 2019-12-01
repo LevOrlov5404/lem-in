@@ -42,7 +42,7 @@ void		read_and_valid_ants(int fd, t_lem *lem)
 			give_error(lem, &line);
 		if (line[0] != '#')
 		{
-			if (!ft_strn_only_digit(line, -1) || (lem->ants_num = ft_atoi(line)) <= 0) // check that only number, check that > 0
+			if (!ft_strn_only_digit(line, -1) || (lem->ants_num = ft_atoi(line)) <= 0 || lem->ants_num > 20000) // check that only number, check that > 0
 				give_error(lem, &line);
 			ft_strdel(&line);
 			return ;
@@ -82,7 +82,12 @@ void		reading_and_check_valid(int fd, t_lem *lem)
 				give_error(lem, &line);
 			lem->is_end = 1;
 		}
-		else if (ft_strncmp(line, "#", 1))
+		else if (!ft_strncmp(line, "#", 1))
+		{
+			if (lem->is_start || lem->is_end)
+				give_error(lem, &line);
+		}
+		else
 		{
 			i = 0;
 			while (line[i] && line[i] != ' ' && line[i] != '-')

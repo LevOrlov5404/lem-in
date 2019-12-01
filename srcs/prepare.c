@@ -12,10 +12,9 @@
 
 #include "lem-in.h"
 
-t_lem			*create_lem()
+t_lem			*create_lem(void)
 {
 	t_lem	*lem;
-	int	i;
 
 	lem = (t_lem*)ft_memalloc(sizeof(t_lem));
 	lem->r = (t_r**)ft_memalloc(sizeof(t_r*) * ROOMS_SIZE);
@@ -23,7 +22,7 @@ t_lem			*create_lem()
 	return (lem);
 }
 
-size_t		hash(char *input)
+size_t			hash(char *input)
 {
 	size_t	hash_num;
 
@@ -32,10 +31,10 @@ size_t		hash(char *input)
 	{
 		hash_num = hash_num * 3 + *(input++);
 	}
-	return hash_num % ROOMS_SIZE;
+	return (hash_num % ROOMS_SIZE);
 }
 
-t_r			*create_room(char *name, t_lem *lem)
+t_r				*create_room(char *name, t_lem *lem)
 {
 	t_r		*r;
 
@@ -48,17 +47,17 @@ t_r			*create_room(char *name, t_lem *lem)
 	return (r);
 }
 
-void		add_same_num_room(t_r *r, char *name, t_lem *lem)
+void			add_same_num_room(t_r *r, char *name, t_lem *lem)
 {
 	t_r	*tmp_r;
-	
+
 	tmp_r = r;
 	while (tmp_r->same_num)
 		tmp_r = tmp_r->same_num;
 	tmp_r->same_num = create_room(name, lem);
 }
 
-t_r			*find_r(t_lem *lem, char *name)
+t_r				*find_r(t_lem *lem, char *name)
 {
 	t_r		*tmp_r;
 

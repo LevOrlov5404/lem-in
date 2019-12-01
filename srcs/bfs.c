@@ -39,7 +39,6 @@ t_w		    *get_way(t_lem *p)
 {
 	t_r	*queque;
 	t_r	*tmp_r;
-	t_l	*tmp_link;
 	t_w *way;
 	
 	if (!p->meet_end)

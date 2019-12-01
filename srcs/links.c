@@ -24,7 +24,7 @@ t_l			*create_link(char *name)
 void		add_link(t_r *r, char *name)
 {
 	t_l	*tmp_link;
-	
+
 	if (!r->links)
 		r->links = create_link(name);
 	else
@@ -39,7 +39,7 @@ void		add_link(t_r *r, char *name)
 void		add_way_link(t_r *r, char *name)
 {
 	t_l	*tmp_link;
-	
+
 	if (!r->way_links)
 		r->way_links = create_link(name);
 	else

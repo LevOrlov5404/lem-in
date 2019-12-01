@@ -30,34 +30,41 @@ t_koord	*create_koord(int x, int y)
 	return (koord);
 }
 
+int		do_with_same_koord(t_lem *lem, int x, int y)
+{
+	t_koord	*same_koord;
+
+	same_koord = lem->koord[lem->h_i];
+	while (same_koord->same_koord)
+	{
+		if (same_koord->x == x && same_koord->y == y)
+			return (0);
+		same_koord = same_koord->same_koord;
+	}
+	if (same_koord->x == x && same_koord->y == y)
+		return (0);
+	same_koord->same_koord = create_koord(x, y);
+	return (1);
+}
+
 int		check_koord_only_digit(t_lem *lem, char *str)
 {
 	char	*ptr;
 	int		x;
 	int		y;
-	t_koord	*same_koord;
 
 	ptr = str;
 	while (*ptr && *ptr != ' ')
 		++ptr;
-	if (!*ptr || !ft_strn_only_digit(str, ptr - str) || (x = ft_atoi(str)) < 0
-			|| !ft_strn_only_digit(ptr + 1, -1) || (y = ft_atoi(ptr + 1)) < 0)
+	if (!*ptr || !*(ptr + 1) || !ft_strn_only_digit(str, ptr - str)
+			|| !ft_strn_only_digit(ptr + 1, -1)
+			|| (x = ft_atoi(str)) < 0
+			|| (y = ft_atoi(ptr + 1)) < 0)
 		return (0);
 	lem->h_i = hash_koord(x, y);
 	if (!lem->koord[lem->h_i])
 		lem->koord[lem->h_i] = create_koord(x, y);
-	else
-	{
-		same_koord = lem->koord[lem->h_i];
-		while (same_koord->same_koord)
-		{
-			if (same_koord->x == x && same_koord->y == y)
-				return (0);
-			same_koord = same_koord->same_koord;
-		}
-		if (same_koord->x == x && same_koord->y == y)
-			return (0);
-		same_koord->same_koord = create_koord(x, y);
-	}
+	else if (!do_with_same_koord(lem, x, y))
+		return (0);
 	return (1);
 }

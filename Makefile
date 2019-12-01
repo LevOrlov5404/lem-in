@@ -11,11 +11,11 @@
 # **************************************************************************** #
 
 NAME = lem-in
-FLAGS = -I./include/ #-Wall -Werror -Wextra
+FLAGS = -I./include/ -Wall -Werror -Wextra
 HEADER = include
 DIR_S = srcs
 DIR_O = objs
-SOURCES = lem-in.c reading_and_check_valid.c prepare.c links.c way.c bfs.c koords.c
+SOURCES = lem-in.c reading_and_check_valid.c prepare.c links.c way.c bfs.c koords.c delete.c prepare2.c output.c
 SRCS = $(addprefix $(DIR_S)/,$(SOURCES))
 OBJS = $(addprefix $(DIR_O)/,$(SOURCES:.c=.o))
 all: $(NAME)

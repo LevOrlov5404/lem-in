@@ -12,159 +12,6 @@
 
 #include "lem-in.h"
 
-void	print_way(t_w *way, t_lem *lem)
-{
-	t_r	*tmp_r;
-
-	while (way)
-	{
-		ft_printf("%s->", way->r->name);
-		way = way->next;
-	}
-	ft_printf("NULL\n");
-}
-
-int		tmp_not_in_next(t_r *tmp, t_r *next)
-{
-	t_l	*check_wl;
-
-	check_wl = next->way_links;
-	while (check_wl)
-	{
-		if (!ft_strcmp(check_wl->name, tmp->name))
-		{
-			check_wl->not_active = 1;
-			return (0);
-		}
-		check_wl = check_wl->next;
-	}
-	return (1);
-}
-
-t_w		**change_ways_first(int n_ways, t_w **way, t_lem *lem)
-{
-	t_w **new_way;
-	t_w	*tmp_w;
-	t_r	*tmp_r;
-	t_r *next_r;
-	t_l	*tmp_wl;
-	int	i;
-
-	i = 0;
-	while (i < n_ways)
-	{
-		tmp_w = way[i++];
-		while (tmp_w->next)
-		{
-			tmp_r = tmp_w->r;
-			next_r = tmp_w->next->r;
-			add_way_link(tmp_r->room_in ? tmp_r->room_in : tmp_r, next_r->name);
-			tmp_w = tmp_w->next;
-		}
-	}
-	new_way = (t_w**)ft_memalloc(sizeof(t_w) * n_ways);
-	i = 0;
-	tmp_wl = lem->start->way_links;
-	while (i < n_ways)
-	{
-		new_way[i++] = create_way(find_r(lem, tmp_wl->name));
-		tmp_wl = tmp_wl->next;
-	}
-	i = 0;
-	while (i < n_ways)
-	{
-		tmp_w = new_way[i++];
-		tmp_r = tmp_w->r;
-		while (tmp_r != lem->end)
-		{
-			tmp_wl = tmp_r->way_links;
-			while (tmp_wl && tmp_wl->not_active)
-				tmp_wl = tmp_wl->next;
-			next_r = find_r(lem, tmp_wl->name);
-			if (tmp_not_in_next(tmp_r, next_r))
-			{
-				add_way(tmp_w, next_r);
-				tmp_r = next_r;
-			}
-			else
-				tmp_wl->not_active = 1;
-		}
-	}
-	return (new_way);
-}
-
-t_w_with_len		**create_ways(int n)
-{
-	t_w_with_len	**ways;
-	int				i;
-
-	ways = (t_w_with_len**)ft_memalloc(sizeof(t_w_with_len*) * n);
-	i = 0;
-	while (i < n)
-		ways[i++] = (t_w_with_len*)ft_memalloc(sizeof(t_w_with_len));
-	return (ways);
-}
-
-void				paste_way_link_at_r(t_w *way)
-{
-	t_r	*tmp_r;
-	t_r	*next_r;
-
-	while (way->next)
-	{
-		tmp_r = way->r;
-		next_r = way->next->r;
-		add_way_link((tmp_r->room_in ? tmp_r->room_in : tmp_r), next_r->name);
-		way = way->next;
-	}
-}
-
-void				paste_way(t_lem *lem, t_w *way)
-{
-	t_r	*tmp_r;
-	t_r *next_r;
-	t_l	*tmp_wl;
-
-	tmp_r = way->next->r;
-	while (tmp_r != lem->end)
-	{
-		tmp_wl = tmp_r->way_links;
-		while (tmp_wl && tmp_wl->not_active)
-			tmp_wl = tmp_wl->next;
-		next_r = find_r(lem, tmp_wl->name);
-		if (tmp_not_in_next(tmp_r, next_r))
-		{
-			add_way(way, next_r);
-			tmp_r = next_r;
-		}
-		else
-			tmp_wl->not_active = 1;
-	}
-}
-
-void				clear_after_change_ways(t_lem *lem, t_w_with_len **ways, int n_ways, t_w *new_way)
-{
-	int	i;
-	t_w	*tmp_w;
-
-	i = 0;
-	while (i < n_ways)
-	{
-		tmp_w = ways[i++]->way;
-		while (tmp_w->r != lem->end)
-		{
-			delete_way_link(tmp_w->r);
-			tmp_w = tmp_w->next;
-		}
-	}
-	tmp_w = new_way;
-	while (tmp_w->r != lem->end)
-	{
-		delete_way_link(tmp_w->r);
-		tmp_w = tmp_w->next;
-	}
-}
-
 t_w_with_len		**change_ways(t_lem *lem, t_w_with_len **ways, int n_ways, t_w *new_way)
 {
 	t_w_with_len	**change_ways;
@@ -240,88 +87,6 @@ int		check_usefull(t_lem *lem, t_w_with_len **ways, int n_ways)
 	return (1);
 }
 
-t_output	*create_output(int ant_num, t_w *way_point)
-{
-	t_output	*output;
-
-	output = (t_output*)ft_memalloc(sizeof(t_output));
-	output->ant_num = ant_num;
-	output->way_point = way_point;
-	output->next = NULL;
-	return (output);
-}
-
-void		add_output(t_output **output, int ant_num, t_w *way_point)
-{
-	t_output	*tmp_output;
-	
-	if (!*output)
-		*output = create_output(ant_num, way_point);
-	else
-	{
-		tmp_output = *output;
-		while (tmp_output->next)
-			tmp_output = tmp_output->next;
-		tmp_output->next = create_output(ant_num, way_point);
-	}
-}
-
-void		print_output(t_lem *lem, t_output **output)
-{
-	t_output	*tmp_output;
-	t_output	*next_output;
-	t_output	*ptr_output;
-
-	while (*output)
-	{
-		if ((*output)->way_point->r != lem->end)
-			break ;
-		tmp_output = *output;
-		ft_printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
-		*output = (*output)->next;
-		free(tmp_output);
-	}
-	if (*output)
-	{
-		tmp_output = *output;
-		while (tmp_output)
-		{
-			ft_printf("L%d-%s ", tmp_output->ant_num, tmp_output->way_point->r->name);
-			tmp_output = tmp_output->next;
-		}
-		tmp_output = *output;
-		while (tmp_output->next)
-		{
-			next_output = tmp_output->next;
-			if (next_output->way_point->r == lem->end)
-			{
-				do
-				{
-					ptr_output = next_output;
-					next_output = next_output->next;
-					free(ptr_output);
-				} while (next_output->way_point->r == lem->end);
-				tmp_output->next = next_output;
-			}
-			tmp_output = tmp_output->next;
-		}
-	}
-	ft_printf("\n");
-}
-
-void		update_output(t_lem *lem, t_output *output)
-{
-	t_output	*tmp_output;
-	t_output	*next_output;
-
-	tmp_output = output;
-	while (tmp_output)
-	{
-		tmp_output->way_point = tmp_output->way_point->next;
-		tmp_output = tmp_output->next;
-	}
-}
-
 void		delete_way(t_w **way)
 {
 	t_w	*tmp_way;
@@ -377,7 +142,7 @@ void		shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 			++i;
 		}
 		print_output(lem, &output);
-		update_output(lem, output);
+		update_output(output);
 	}
 	delete_ways(&ways, n_ways);
 }
@@ -386,8 +151,8 @@ void		solve(t_lem *lem)
 {
 	t_w_with_len	**ways;
 	t_w_with_len	**next_ways;
-	t_w		*new_way;
-	int		n_ways;
+	t_w				*new_way;
+	int				n_ways;
 
 	if (!(new_way = bfs(lem)))
 		give_error(lem, NULL);
@@ -412,98 +177,6 @@ void		solve(t_lem *lem)
 	g_input_str[g_input_size] = '\0';
 	write(1, g_input_str, g_input_size);
 	shape_output(lem, ways, n_ways);
-}
-
-void		delete_links(t_l **links)
-{
-	t_l	*link;
-	t_l	*ptr_link;
-
-	link = *links;
-	while (link)
-	{
-		ptr_link = link->next;
-		ft_strdel(&link->name);
-		free(link);
-		link = ptr_link;
-	}
-	*links = NULL;
-}
-
-void		delete_room(t_r **room)
-{
-	if ((*room)->name)
-		ft_strdel(&(*room)->name);
-	if ((*room)->links)
-		delete_links(&(*room)->links);
-	if ((*room)->way_links)
-		delete_links(&(*room)->way_links);
-	free(*room);
-	*room = NULL;
-}
-
-void		delete_rooms(t_lem *lem)
-{
-	int	i;
-	t_r	*room;
-	t_r *ptr_room;
-
-	i = 0;
-	while (i < ROOMS_SIZE)
-	{
-		if (lem->r[i])
-		{
-			room = lem->r[i];
-			while (room->same_num)
-			{
-				ptr_room = room->same_num;
-				if (room->room_out)
-					delete_room(&room->room_out);
-				delete_room(&room);
-				room = ptr_room;
-			}
-			if (room->room_out)
-				delete_room(&room->room_out);
-			delete_room(&room);
-		}
-		++i;
-	}
-	free(lem->r);
-	lem->r = NULL;
-}
-
-void		delete_koord(t_lem *lem)
-{
-	t_koord	*tmp_koord;
-	t_koord	*ptr_koord;
-	int		i;
-
-	i = 0;
-	while (i < ROOMS_SIZE)
-	{
-		tmp_koord = lem->koord[i++];
-		if (tmp_koord)
-		{
-			while (tmp_koord->same_koord)
-			{
-				ptr_koord = tmp_koord->same_koord;
-				free(tmp_koord);
-				tmp_koord = ptr_koord;
-			}
-			free(tmp_koord);
-		}
-	}
-	free(lem->koord);
-	lem->koord = NULL;
-}
-
-void		delete_default(t_lem *lem)
-{
-	ft_strdel(&g_input_str);
-	delete_rooms(lem);
-	delete_koord(lem);
-	free(lem);
-	lem = NULL;
 }
 
 int			main(void)
