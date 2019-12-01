@@ -30,22 +30,19 @@ ft_strnstr.c ft_strrchr.c ft_strsplit.c ft_strstr.c \
 ft_strsub.c ft_strtrim.c ft_strupcase.c ft_tolower.c ft_toupper.c \
 get_next_line.c ft_strn_only_digit.c
 
-
 OBJ = $(SRC:.c=.o)
 
-INCLUDES = ./
+all: $(NAME)
 
-all : $(NAME)
-
-$(NAME): $(OBJ) 
+$(NAME): $(OBJ) $(HEADER)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 
-$(OBJ) : $(SRC) libft.h
-	@gcc -Wall -Wextra -Werror -I $(INCLUDES) -c $(SRC)
+$(OBJ): %.o : %.c
+	@gcc -Wall -Wextra -Werror -c $< -o $@
 
 clean:
-	@/bin/rm -f *.o
+	@/bin/rm -f $(OBJ)
 
 fclean: clean
 	@/bin/rm -f $(NAME)

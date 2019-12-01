@@ -512,9 +512,9 @@ int			main(void)
 	int	fd;
 
 	lem = create_lem();
-	fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
+	// fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
 	// fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
-	// fd = 0;
+	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';

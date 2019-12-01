@@ -16,7 +16,7 @@ size_t	hash_koord(int x, int y)
 {
 	size_t	hash;
 
-	hash = x * 5 + y * 3;
+	hash = x * 5 + y * 7 + 3 * y * x;
 	return (hash % ROOMS_SIZE);
 }
 
