@@ -482,21 +482,26 @@ void		delete_koord(t_lem *lem)
 	while (i < ROOMS_SIZE)
 	{
 		tmp_koord = lem->koord[i++];
-		while (tmp_koord->same_koord)
+		if (tmp_koord)
 		{
-			ptr_koord = tmp_koord->same_koord;
+			while (tmp_koord->same_koord)
+			{
+				ptr_koord = tmp_koord->same_koord;
+				free(tmp_koord);
+				tmp_koord = ptr_koord;
+			}
 			free(tmp_koord);
-			tmp_koord = ptr_koord;
 		}
-		free(tmp_koord);
 	}
+	free(lem->koord);
+	lem->koord = NULL;
 }
 
 void		delete_default(t_lem *lem)
 {
 	ft_strdel(&g_input_str);
 	delete_rooms(lem);
-	// delete_koord(lem);
+	delete_koord(lem);
 	free(lem);
 	lem = NULL;
 }
@@ -507,9 +512,9 @@ int			main(void)
 	int	fd;
 
 	lem = create_lem();
-	//fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
-	fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
-	// fd = 0;
+	// fd = open("/Users/pnita/my_work/git_lem-in/maps/invalid", O_RDONLY);
+	// fd = open("/Users/pnita/my_work/git_lem-in/maps/big-superposition", O_RDONLY);
+	fd = 0;
 	g_input_str = (char*)ft_memalloc(sizeof(char) * (G_INPUT_STR_SIZE + 1));
 	g_input_size = 0;
 	g_input_str[g_input_size] = '\0';

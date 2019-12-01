@@ -90,10 +90,8 @@ int		check_koord_only_digit(t_lem *lem, char *str)
 	ptr = str;
 	while (*ptr && *ptr != ' ')
 		++ptr;
-	if (!*ptr || !ft_strn_only_digit(str, ptr - str) || !ft_strn_only_digit(ptr + 1, -1))
+	if (!*ptr || !ft_strn_only_digit(str, ptr - str) || !ft_strn_only_digit(ptr + 1, -1) || (x = ft_atoi(str)) < 0 || (y = ft_atoi(ptr + 1)) < 0)
 		return (0);
-	x = ft_atoi(str);
-	y = ft_atoi(ptr + 1);
 	lem->h_i = hash_koord(x, y);
 	if (!lem->koord[lem->h_i])
 		lem->koord[lem->h_i] = create_koord(x, y);
@@ -104,7 +102,7 @@ int		check_koord_only_digit(t_lem *lem, char *str)
 		{
 			if (same_koord->x == x && same_koord->y == y)
 				return (0);
-			same_koord = same_koord;
+			same_koord = same_koord->same_koord;
 		}
 		if (same_koord->x == x && same_koord->y == y)
 			return (0);
