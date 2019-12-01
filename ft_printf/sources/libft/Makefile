@@ -32,17 +32,19 @@ get_next_line.c ft_strn_only_digit.c
 
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
+INCLUDES = ./
 
-$(NAME): $(OBJ) $(HEADER)
+all : $(NAME)
+
+$(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 
-$(OBJ): %.o : %.c
-	@gcc -Wall -Wextra -Werror -c $< -o $@
+$(OBJ) : $(SRC) libft.h
+	@gcc -Wall -Wextra -Werror -I $(INCLUDES) -c $(SRC)
 
 clean:
-	@/bin/rm -f $(OBJ)
+	@/bin/rm -f *.o
 
 fclean: clean
 	@/bin/rm -f $(NAME)
