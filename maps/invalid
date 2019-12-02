@@ -1,8 +1,8 @@
 10
 ##start
-##wrong cmd
 start 0 1
 middle 1 2
+0 0 0
 ##end
 end 3 0
 start-middle

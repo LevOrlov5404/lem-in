@@ -10,7 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-C = clang
 NAME = libftprintf.a
 FLAGS = -Wall -Wextra -Werror
 LIBFT = sources/libft
@@ -30,7 +29,7 @@ $(NAME): $(OBJS)
 	@ranlib $(NAME)
 $(DIR_O)/%.o: $(DIR_S)/%.c
 	@mkdir -p temporary
-	@$(CC) $(FLAGS) -I $(HEADER) -o $@ -c $<
+	@gcc $(FLAGS) -I $(HEADER) -o $@ -c $<
 clean:
 	@rm -rf $(DIR_O)
 	@rm -f $(OBJS)
