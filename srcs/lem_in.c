@@ -65,7 +65,7 @@ void	shape_output(t_lem *lem, t_w_with_len **ways, int n_ways)
 	delete_ways(&ways, n_ways);
 }
 
-void	step_in_solve(t_lem *lem, t_w_with_len ***ways,
+int		step_in_solve(t_lem *lem, t_w_with_len ***ways,
 		int *n_ways, t_w **new_way)
 {
 	t_w_with_len	**next_ways;
@@ -74,8 +74,15 @@ void	step_in_solve(t_lem *lem, t_w_with_len ***ways,
 	next_ways = change_ways(lem, *ways, (*n_ways)++, *new_way);
 	set_ways_len_and_sort(next_ways, *n_ways);
 	delete_way(new_way);
+	if (!check_usefull(lem, next_ways, *n_ways))
+	{
+		delete_ways(&next_ways, *n_ways);
+		--(*n_ways);
+		return (0);
+	}
 	delete_ways(ways, *n_ways - 1);
 	*ways = next_ways;
+	return (1);
 }
 
 void	solve(t_lem *lem)
@@ -93,8 +100,7 @@ void	solve(t_lem *lem)
 	ways[0]->len = lem->end->steps_in_q;
 	while ((new_way = bfs(lem)))
 	{
-		step_in_solve(lem, &ways, &n_ways, &new_way);
-		if (!check_usefull(lem, ways, n_ways))
+		if (!step_in_solve(lem, &ways, &n_ways, &new_way))
 			break ;
 	}
 	delete_way(&new_way);
