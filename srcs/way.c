@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 void		add_r_in_queque(t_r *queque, t_r *r_to_add)
 {
@@ -20,7 +20,7 @@ void		add_r_in_queque(t_r *queque, t_r *r_to_add)
 	r_to_add->was_in_q = 1;
 }
 
-t_w		    *create_way(t_r *r)
+t_w			*create_way(t_r *r)
 {
 	t_w	*way;
 
@@ -29,7 +29,7 @@ t_w		    *create_way(t_r *r)
 	return (way);
 }
 
-void	    push_to_begin_w(t_w **way, t_r *r)
+void		push_to_begin_w(t_w **way, t_r *r)
 {
 	t_w	*tmp;
 
@@ -43,7 +43,7 @@ void	    push_to_begin_w(t_w **way, t_r *r)
 	}
 }
 
-void	    add_way(t_w *way, t_r *r)
+void		add_way(t_w *way, t_r *r)
 {
 	t_w	*tmp;
 

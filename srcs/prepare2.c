@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 int				tmp_not_in_next(t_r *tmp, t_r *next)
 {

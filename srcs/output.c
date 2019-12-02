@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 t_output	*create_output(int ant_num, t_w *way_point)
 {
